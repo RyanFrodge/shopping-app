@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Input, Select, Checkbox } from 'antd';
 import { MdOutlineEdit, MdDeleteOutline } from 'react-icons/md';
+import { useSelector, useDispatch } from 'react-redux'
+import { itemAdded, itemUpdated, itemDeleted } from '../features/items/itemsSlice'
+
+
+
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -9,29 +14,13 @@ const { Option } = Select;
 
 const ShoppingList = () => {
 
+    const stateItems = useSelector(state => state.items)
 
-    let mockData = [
-        {
-            "id": 0,
-            "name": "Tomatoes",
-            "description": "Green cherry tomatoes",
-            "quantity": "3",
-            "purchased": false
-        }, {
-            "id": 1,
-            "name": "Tomatoes",
-            "description": "Green cherry tomatoes",
-            "quantity": "3",
-            "purchased": true
-        }, {
-            "id": 2,
-            "name": "Tomatoes",
-            "description": "Green cherry tomatoes",
-            "quantity": "3",
-            "purchased": false
-        }]
+    const items = stateItems.slice().sort((a, b) => a.purchased === b.purchased ? 0 : a.purchased ? 1 : -1)
 
-    const [items, setItems] = useState(mockData);
+    const dispatch = useDispatch()
+
+
     const [modalType, setModalType] = useState("add");
 
 
@@ -43,7 +32,7 @@ const ShoppingList = () => {
     const [itemQuantity, setItemQuantity] = useState("1");
     const [itemPurchased, setItemPurchased] = useState(false);
 
-    const [idCount, setIdCount] = useState(0); //temporary 
+    // const [idCount, setIdCount] = useState(0); //temporary 
 
 
     const updateName = (e) => {
@@ -78,49 +67,38 @@ const ShoppingList = () => {
     };
 
     const handleCancel = () => {
-        //null item state variables on success and failure of all funcitons
         setIsModalVisible(false);
         clearItem();
     };
 
     const addItem = () => {
-        items.push({
-            id: idCount,
-            name: itemName,
-            description: itemDescription,
-            quantity: itemQuantity,
-            purchased: itemPurchased
-        })
-
-        setIdCount(idCount + 1)
-
-
-        //update state
-
+        dispatch(
+            itemAdded(itemName, itemDescription, itemQuantity, itemPurchased)
+        )
         setIsModalVisible(false);
         clearItem();
     };
 
     const editItem = () => {
-
-        if (itemName !== selected.name)
-            selected.name = itemName
-        if (itemDescription !== selected.description)
-            selected.description = itemDescription
-        if (itemQuantity !== selected.quantity)
-            selected.quantity = itemQuantity
-        if (itemPurchased !== selected.purchased)
-            selected.purchased = itemPurchased
-
-        //update state
-
+        dispatch(
+            itemUpdated({
+                id: selected.id,
+                name: itemName,
+                description: itemDescription,
+                quantity: itemQuantity,
+                purchased: itemPurchased
+            })
+        )
         setIsModalVisible(false);
         clearItem();
     };
 
     const deleteItem = () => {
-        console.log(selected)
-        setItems(items.filter(el => el.id !== selected.id))
+        dispatch(
+            itemDeleted({
+                id: selected.id
+            })
+        )
         setIsModalVisible(false);
         clearItem();
     };
