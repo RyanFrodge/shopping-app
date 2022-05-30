@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Input, Select, Checkbox } from 'antd';
-import { MdOutlineEdit, MdDeleteOutline, MdEdit } from 'react-icons/md';
+import { MdOutlineEdit, MdDeleteOutline } from 'react-icons/md';
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -8,6 +8,7 @@ const { Option } = Select;
 
 
 const ShoppingList = () => {
+
 
     let mockData = [
         {
@@ -37,26 +38,98 @@ const ShoppingList = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selected, setSelected] = useState({});
 
-    const showModal = (type) => {
+    const [itemName, setItemName] = useState("");
+    const [itemDescription, setItemDescription] = useState("");
+    const [itemQuantity, setItemQuantity] = useState("1");
+    const [itemPurchased, setItemPurchased] = useState(false);
+
+    const [idCount, setIdCount] = useState(0); //temporary 
+
+
+    const updateName = (e) => {
+        setItemName(e.target.value)
+    };
+
+    const updateDescription = (e) => {
+        setItemDescription(e.target.value)
+    };
+
+    const updateQuantity = (e) => {
+        setItemQuantity(e)
+    };
+
+    const updatePurchased = (e) => {
+        setItemPurchased(e.target.checked)
+    };
+
+    const showModal = (type, item) => {
         setModalType(type)
+
+        setSelected(item) //needs time to update?
+
+        if (type === "edit") {//populate fields
+            setItemName(item.name)
+            setItemDescription(item.description)
+            setItemQuantity(item.quantity)
+            setItemPurchased(item.purchased)
+        }
+
         setIsModalVisible(true);
     };
 
     const handleCancel = () => {
+        //null item state variables on success and failure of all funcitons
         setIsModalVisible(false);
+        clearItem();
     };
 
     const addItem = () => {
+        items.push({
+            id: idCount,
+            name: itemName,
+            description: itemDescription,
+            quantity: itemQuantity,
+            purchased: itemPurchased
+        })
+
+        setIdCount(idCount + 1)
+
+
+        //update state
+
         setIsModalVisible(false);
+        clearItem();
     };
 
     const editItem = () => {
+
+        if (itemName !== selected.name)
+            selected.name = itemName
+        if (itemDescription !== selected.description)
+            selected.description = itemDescription
+        if (itemQuantity !== selected.quantity)
+            selected.quantity = itemQuantity
+        if (itemPurchased !== selected.purchased)
+            selected.purchased = itemPurchased
+
+        //update state
+
         setIsModalVisible(false);
+        clearItem();
     };
 
     const deleteItem = () => {
+        console.log(selected)
         setItems(items.filter(el => el.id !== selected.id))
         setIsModalVisible(false);
+        clearItem();
+    };
+
+    const clearItem = () => {
+        setItemName("")
+        setItemDescription("")
+        setItemQuantity("")
+        setItemPurchased(false)
     };
 
     return (
@@ -73,10 +146,10 @@ const ShoppingList = () => {
                 </Button>
                     ]}>
                     <div className="flex flex-col space-y-lg">
-                        <h1>Add your new item below</h1>
-                        <Input placeholder="Item Name" />
-                        <TextArea rows={4} placeholder="Description" maxLength={100} showCount="true" />
-                        <Select placeholder="How many?">
+                        <h1>Edit your item below</h1>
+                        <Input placeholder="Item Name" value={itemName} onChange={updateName} />
+                        <TextArea placeholder="Description" rows={4} maxLength={100} showCount="true" value={itemDescription} onChange={updateDescription} />
+                        <Select placeholder="How many?" onChange={updateQuantity}>
                             <Option value="1">1</Option>
                             <Option value="2">2</Option>
                             <Option value="3">3</Option>
@@ -97,20 +170,20 @@ const ShoppingList = () => {
                         ]}>
                         <div className="flex flex-col space-y-lg">
                             <h1>Edit your item below</h1>
-                            <Input placeholder={selected.name} />
-                            <TextArea rows={4} placeholder={selected.description} maxLength={100} showCount="true" />
-                            <Select placeholder={selected.quantity}>
+                            <Input placeholder={itemName} onChange={updateName} />
+                            <TextArea rows={4} maxLength={100} showCount="true" placeholder={itemDescription} onChange={updateDescription} />
+                            <Select placeholder={itemQuantity} onChange={updateQuantity}>
                                 <Option value="1">1</Option>
                                 <Option value="2">2</Option>
                                 <Option value="3">3</Option>
                             </Select>
-                            <Checkbox selected={selected.purchased}>Purchased</Checkbox>
+                            <Checkbox checked={itemPurchased} onChange={updatePurchased}>Purchased</Checkbox>
                         </div>
                     </Modal>
 
                     :
 
-                    <Modal title="Delete Item?" visible={isModalVisible} destroyOnClose="true"
+                    <Modal title="Delete Item?" visible={isModalVisible} destroyOnClose="true" closable="true"
                         footer={[
                             <Button key="back" onClick={handleCancel}>
                                 Cancel
@@ -120,7 +193,7 @@ const ShoppingList = () => {
                 </Button>
                         ]}>
                         <div className="flex flex-col space-y-lg">
-                            <h1>Are you sure you want to delete this item? This can not be undone.</h1>                            
+                            <h1>Are you sure you want to delete this item? This can not be undone.</h1>
                         </div>
                     </Modal>
 
@@ -145,15 +218,23 @@ const ShoppingList = () => {
                     <div className="flex flex-col">
                         <ul>
                             {items.map((item) =>
-                                <li className="flex flex-row border-2 border-black p-md my-md items-center">
+                                <li key={item.id} className="flex flex-row border-2 border-black p-md my-md items-center">
                                     <Checkbox checked={item.purchased}></Checkbox>
-                                    <div className="flex flex-col ml-md ">
-                                        <strong className="mr-auto">{item.name}</strong>
-                                        <body className="mr-auto">{item.description}</body>
-                                    </div>
+                                    {item.purchased ?
+                                        <div className="flex flex-col ml-md ">
+                                            <strong className="mr-auto line-through text-muted-blue">{item.name}</strong>
+                                            <div className="mr-auto line-through">{item.description}</div>
+                                        </div>
+                                        :
+                                        <div className="flex flex-col ml-md ">
+                                            <strong className="mr-auto ">{item.name}</strong>
+                                            <div className="mr-auto">{item.description}</div>
+                                        </div>
+                                    }
+
                                     <div className="flex flex-row ml-auto" >
-                                        <MdOutlineEdit className="cursor-pointer" onClick={() => {showModal("edit"); setSelected(item)}} size={30} />
-                                        <MdDeleteOutline className="cursor-pointer ml-xl" onClick={() => {showModal("delete"); setSelected(item)}} size={30} />
+                                        <MdOutlineEdit className="cursor-pointer" onClick={() => { showModal("edit", item); }} size={30} />
+                                        <MdDeleteOutline className="cursor-pointer ml-xl" onClick={() => { showModal("delete", item); }} size={30} />
                                     </div>
                                 </li>
                             )}
