@@ -2,24 +2,138 @@ import { createSlice, nanoid } from '@reduxjs/toolkit'
 
 const initialState = [
     {
-        "id": 0,
+        "id": nanoid(),
         "name": "Potatoes",
-        "description": "Versitile Tubers",
+        "description": "Versatile Tubers",
         "quantity": "1",
         "purchased": false
     }, {
-        "id": 1,
+        "id": nanoid(),
         "name": "More Potatoes",
-        "description": "Versitile Tubers",
+        "description": "Versatile Tubers",
         "quantity": "2",
         "purchased": false
     }, {
-        "id": 2,
+        "id": nanoid(),
         "name": "Tubers",
-        "description": "Versitile Potatoes",
+        "description": "Versatile Potatoes",
         "quantity": "3",
         "purchased": true
-    }]
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    }, {
+        "id": nanoid(),
+        "name": "Tubers",
+        "description": "Versatile Potatoes",
+        "quantity": "3",
+        "purchased": true
+    },]
 
 const itemsSlice = createSlice({
     name: 'items',

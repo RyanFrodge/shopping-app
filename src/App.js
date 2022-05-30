@@ -9,7 +9,7 @@ function App() {
     <div className="App">
       <nav className="bg-muted-blue">
         <section className="px-lg py-md">
-        <h1 className="flex text-lg text-white mr-auto">
+        <h1 className="flex text-lg text-white mr-auto ml-md">
           SHOPPING LIST
         </h1>
         </section>

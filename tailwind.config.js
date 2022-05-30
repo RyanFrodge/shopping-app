@@ -8,6 +8,8 @@ module.exports = {
       md: '12px',
       lg: '16px',
       xl: '24px',
+      xxl: '32px',
+      xxxl: '50px',
     },
     fontFamily: {
       heading: ['Nunito', 'sans-serif'],

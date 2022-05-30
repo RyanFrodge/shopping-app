@@ -15,25 +15,19 @@ const { Option } = Select;
 const ShoppingList = () => {
 
     const stateItems = useSelector(state => state.items)
+    const dispatch = useDispatch()
 
     const items = stateItems.slice().sort((a, b) => a.purchased === b.purchased ? 0 : a.purchased ? 1 : -1)
 
-    const dispatch = useDispatch()
-
-
     const [modalType, setModalType] = useState("add");
-
-
     const [isModalVisible, setIsModalVisible] = useState(false);
+
     const [selected, setSelected] = useState({});
 
     const [itemName, setItemName] = useState("");
     const [itemDescription, setItemDescription] = useState("");
     const [itemQuantity, setItemQuantity] = useState("1");
     const [itemPurchased, setItemPurchased] = useState(false);
-
-    // const [idCount, setIdCount] = useState(0); //temporary 
-
 
     const updateName = (e) => {
         setItemName(e.target.value)
@@ -112,22 +106,22 @@ const ShoppingList = () => {
 
     return (
         <>
-
             {modalType === "add" ?
-                <Modal title="Add an Item" visible={isModalVisible} destroyOnClose="true"
+                <Modal title="SHOPPING LIST" visible={isModalVisible} destroyOnClose="true" width={400}
                     footer={[
                         <Button key="back" onClick={handleCancel}>
                             Cancel
                 </Button>,
-                        <Button key="submit" type="primary" onClick={addItem} className="text-black hover:bg-vivid-blue">
+                        <Button key="submit" type="primary" onClick={addItem} className="text-white bg-vivid-blue">
                             Add Item
                 </Button>
                     ]}>
-                    <div className="flex flex-col space-y-lg">
-                        <h1>Edit your item below</h1>
-                        <Input placeholder="Item Name" value={itemName} onChange={updateName} />
-                        <TextArea placeholder="Description" rows={4} maxLength={100} showCount="true" value={itemDescription} onChange={updateDescription} />
-                        <Select placeholder="How many?" onChange={updateQuantity}>
+                    <div className="flex flex-col mb-[150px]">
+                        <div className="text-lg">Add an item</div>
+                        <div className="text-md">Add your new item below</div>
+                        <Input placeholder="Item Name" value={itemName} onChange={updateName}  className="mt-md"/>
+                        <TextArea placeholder="Description" rows={4} maxLength={100} showCount="true" value={itemDescription} onChange={updateDescription}  className="mt-md"/>
+                        <Select placeholder="How many?" onChange={updateQuantity}  className="mt-md">
                             <Option value="1">1</Option>
                             <Option value="2">2</Option>
                             <Option value="3">3</Option>
@@ -137,31 +131,32 @@ const ShoppingList = () => {
 
                 : modalType === "edit" ?
 
-                    <Modal title="Edit an Item" visible={isModalVisible} destroyOnClose="true"
+                    <Modal title="SHOPPING LIST" visible={isModalVisible} destroyOnClose="true" width={400}
                         footer={[
                             <Button key="back" onClick={handleCancel}>
                                 Cancel
                 </Button>,
-                            <Button key="submit" type="primary" onClick={editItem} className="text-black hover:bg-vivid-blue">
+                            <Button key="submit" type="primary" onClick={editItem} className="text-white bg-vivid-blue">
                                 Save Item
                 </Button>
                         ]}>
-                        <div className="flex flex-col space-y-lg">
-                            <h1>Edit your item below</h1>
-                            <Input placeholder={itemName} onChange={updateName} />
-                            <TextArea rows={4} maxLength={100} showCount="true" placeholder={itemDescription} onChange={updateDescription} />
-                            <Select placeholder={itemQuantity} onChange={updateQuantity}>
+                        <div className="flex flex-col mb-[150px]">
+                            <div className="text-lg">Edit an item</div>
+                            <div className="text-md">Edit your item below</div>
+                            <Input placeholder={itemName} onChange={updateName} className="mt-md" />
+                            <TextArea rows={4} maxLength={100} showCount="true" placeholder={itemDescription} onChange={updateDescription} className="mt-md" />
+                            <Select placeholder={itemQuantity} onChange={updateQuantity} className="mt-md">
                                 <Option value="1">1</Option>
                                 <Option value="2">2</Option>
                                 <Option value="3">3</Option>
                             </Select>
-                            <Checkbox checked={itemPurchased} onChange={updatePurchased}>Purchased</Checkbox>
+                            <Checkbox checked={itemPurchased} onChange={updatePurchased} className="mt-md"><div className="text-[#9CA8B4]">Purchased</div></Checkbox>
                         </div>
                     </Modal>
 
                     :
 
-                    <Modal title="Delete Item?" visible={isModalVisible} destroyOnClose="true" closable="true"
+                    <Modal title="Delete Item?" visible={isModalVisible} destroyOnClose="true" closable="true" width={400}
                         footer={[
                             <Button key="back" onClick={handleCancel}>
                                 Cancel
@@ -180,36 +175,27 @@ const ShoppingList = () => {
 
             {items.length === 0
                 ?
-                <div className="flex flex-col h-[300px] w-1/2 border-2 border-black rounded ml-auto mr-auto m-lg items-center justify-center">
-
-                    Your shopping list is empty :(
-                        <button className="bg-vivid-blue rounded text-white m-md px-md py-sm"
+                <div className="flex flex-col h-[300px] w-1/2 border-2 border-gray rounded ml-auto mr-auto m-lg items-center justify-center">
+                    <div className="text-gray-500">Your shopping list is empty :(</div>
+                    <button className="bg-vivid-blue rounded text-white m-md px-md py-sm"
                         onClick={() => showModal("add")}>Add your first item</button>
                 </div>
                 :
-                <div className="w-[80%] mt-xl ml-auto mr-auto">
+                <div className="w-[80%] mt-xxl ml-auto mr-auto">
                     <div className="flex items-center">
-                        <h1><strong>Your Items</strong></h1>
+                        <div className="text-xl"><strong>Your Items</strong></div>
                         <button className="bg-vivid-blue rounded text-white px-md py-sm ml-auto"
                             onClick={() => showModal("add")}>Add item</button>
                     </div>
                     <div className="flex flex-col">
                         <ul>
                             {items.map((item) =>
-                                <li key={item.id} className="flex flex-row border-2 border-black p-md my-md items-center">
+                                <li key={item.id} className={item.purchased ? "flex flex-row border border-gray rounded-md p-lg my-md items-center bg-[#F8FAFC]" : "flex flex-row border border-gray rounded-md p-lg my-md items-center"}>
                                     <Checkbox checked={item.purchased}></Checkbox>
-                                    {item.purchased ?
-                                        <div className="flex flex-col ml-md ">
-                                            <strong className="mr-auto line-through text-muted-blue">{item.name}</strong>
-                                            <div className="mr-auto line-through">{item.description}</div>
-                                        </div>
-                                        :
-                                        <div className="flex flex-col ml-md ">
-                                            <strong className="mr-auto ">{item.name}</strong>
-                                            <div className="mr-auto">{item.description}</div>
-                                        </div>
-                                    }
-
+                                    <div className="flex flex-col ml-md ">
+                                        <strong className={item.purchased ? "mr-auto line-through text-muted-blue" : "mr-auto"}>{item.name}</strong>
+                                        <div className={item.purchased ? "mr-auto line-through" : "mr-auto"}>{item.description}</div>
+                                    </div>
                                     <div className="flex flex-row ml-auto" >
                                         <MdOutlineEdit className="cursor-pointer" onClick={() => { showModal("edit", item); }} size={30} />
                                         <MdDeleteOutline className="cursor-pointer ml-xl" onClick={() => { showModal("delete", item); }} size={30} />
@@ -220,7 +206,6 @@ const ShoppingList = () => {
                     </div>
                 </div>
             }
-
         </>
     );
 };
