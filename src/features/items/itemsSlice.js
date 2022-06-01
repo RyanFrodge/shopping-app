@@ -16,7 +16,6 @@ export const addNewItem = createAsyncThunk(
     'items/addNewItem',
     async initialItem => {
         const res = await axios.post('http://localhost:4000/items/addItem', initialItem)
-        console.log(res)
         return res.data
     }
 )

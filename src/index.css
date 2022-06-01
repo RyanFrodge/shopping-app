@@ -1,22 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200;300;400;500;600&family=Nunito:ital,wght@0,200;0,300;0,400;0,600;1,200;1,300;1,400;1,600&display=swap"');
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;1,200;1,300;1,400;1,600&display=swap');
+
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer base {
+  div {
+      font-family: Nunito;
+  }
 }
 
 .ant-modal-title {
@@ -24,5 +17,33 @@ code {
 }
 
 .ant-modal-header {
-  background-color: #FAFAFA
+  background-color: #FAFAFA;
+  border-bottom-color: #D9E2EB;
+}
+
+.ant-modal-footer{
+  border-top: 0 none;
+  border-bottom: 4px solid #1871E8;
+}
+
+.ant-modal-content{
+  margin-top: 75px;
+  box-shadow: 0 0 25px #444;
+  border-radius: 4px;
+}
+
+.ant-select-arrow {
+  color: #555F7C;
+}
+
+.ant-input{
+  border-color: #d5dfe9;
+}
+
+.ant-select {
+  border-color: #d5dfe9;
+}
+
+.ant-checkbox-inner{
+  border-width: 2px;
 }

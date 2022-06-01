@@ -5,6 +5,7 @@ module.exports = {
   theme: {
     spacing: {
       sm: '8px',
+      smd: "10px",
       md: '12px',
       lg: '16px',
       xl: '24px',
@@ -12,8 +13,8 @@ module.exports = {
       xxxl: '50px',
     },
     fontFamily: {
-      heading: ['Nunito', 'sans-serif'],
-      body: ['Doris', 'sans-serif']
+      heading: ['Dosis', 'sans-serif'],
+      sans: ['Nunito', 'sans-serif']
     },
     extend: {
       colors: {

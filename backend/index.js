@@ -12,33 +12,32 @@ const app = express();
 const cors = require("cors");
 const PORT = 4000;
 const mongoose = require("mongoose");
+const router = express.Router();
+const connection = mongoose.connection;
+
 let items = require("./model");
 
 app.use(bodyParser.json())
-
 app.use(cors());
+app.use("/", router);
 
-const router = express.Router();
+
 
 
 mongoose.connect("mongodb://127.0.0.1:27017/ShoppingList", {
     useNewUrlParser: true
 });
 
-
-const connection = mongoose.connection;
-
 connection.once("open", function () {
     console.log("Connection with MongoDB was successful");
 });
 
-
-app.use("/", router);
-
-
 app.listen(PORT, function () {
     console.log("Server is running on Port: " + PORT);
 });
+
+
+//ROUTES 
 
 router.route("/items").get(function (req, res) {
     items.find({}, function (err, result) {
@@ -51,19 +50,18 @@ router.route("/items").get(function (req, res) {
 });
 
 router.route("/items/addItem").post(function (req, res) {
-    console.log(req.body)
-    const matchDocument = {
+    const doc = {
         name: req.body.name,
         description: req.body.description,
         quantity: req.body.quantity,
         purchased: req.body.purchased
     };
 
-    items.create(matchDocument, function (err, result) {
+    items.create(doc, function (err, result) {
         if (err) {
             res.status(400).send("Error inserting matches!");
         } else {
-            console.log(`Added a new match with id ${result._id}`);
+            console.log(`Added a new document with id ${result._id}`);
             res.send(result);
         }
     });
@@ -87,7 +85,6 @@ router.route("/items/deleteItem/:id").delete((req, res) => {
 
 
 router.route("/items/editItem/:id").post(function (req, res) {
-    console.log(req.body)
     const listingQuery = { _id: req.body._id };
     const updates = {
         $set: {
@@ -99,18 +96,18 @@ router.route("/items/editItem/:id").post(function (req, res) {
     };
 
     items.updateOne(listingQuery, updates, function (err, _result) {
-            if (err) {
-                res.status(400).send(`Error updating listing with id ${listingQuery._id}!`);
-            } else {
-                console.log("1 document updated");
-                res.send({
-                    _id: listingQuery._id, 
-                    name: updates["$set"].name,
-                    description: updates["$set"].description,
-                    quantity: updates["$set"].quantity,
-                    purchased: updates["$set"].purchased,
-                })
-            }
-        });
+        if (err) {
+            res.status(400).send(`Error updating listing with id ${listingQuery._id}!`);
+        } else {
+            console.log("1 document updated");
+            res.send({
+                _id: listingQuery._id,
+                name: updates["$set"].name,
+                description: updates["$set"].description,
+                quantity: updates["$set"].quantity,
+                purchased: updates["$set"].purchased,
+            })
+        }
+    });
 });
 
