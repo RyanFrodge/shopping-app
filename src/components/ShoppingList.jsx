@@ -2,22 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { Button, Modal, Input, Select, Checkbox } from 'antd';
 import { MdOutlineEdit, MdDeleteOutline } from 'react-icons/md';
 import { useSelector, useDispatch } from 'react-redux'
-import { itemAdded, itemUpdated, itemDeleted } from '../features/items/itemsSlice'
-
-
-
+import { addNewItem, deleteExistingItem, editExistingItem, selectAllItems, fetchItems } from '../features/items/itemsSlice'
 const { TextArea } = Input;
 const { Option } = Select;
 
 
-
-
 const ShoppingList = () => {
-
-    const stateItems = useSelector(state => state.items)
-    const dispatch = useDispatch()
-
-    const items = stateItems.slice().sort((a, b) => a.purchased === b.purchased ? 0 : a.purchased ? 1 : -1)
 
     const [modalType, setModalType] = useState("add");
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -28,6 +18,23 @@ const ShoppingList = () => {
     const [itemDescription, setItemDescription] = useState("");
     const [itemQuantity, setItemQuantity] = useState("1");
     const [itemPurchased, setItemPurchased] = useState(false);
+
+    const dispatch = useDispatch()
+    const itemsStatus = useSelector(state => state.items.status)
+    const [addRequestStatus, setAddRequestStatus] = useState('idle')
+    const [deleteRequestStatus, setDeleteRequestStatus] = useState('idle')
+    const [editRequestStatus, setEditRequestStatus] = useState('idle')
+
+    const stateItems = useSelector(selectAllItems)
+    const items = stateItems.slice().sort((a, b) => a.purchased === b.purchased ? 0 : a.purchased ? 1 : -1)
+    console.log(items)
+
+    useEffect(() => {
+        if (itemsStatus === 'idle') {
+            dispatch(fetchItems())
+        }
+    }, [itemsStatus, dispatch])
+
 
     const updateName = (e) => {
         setItemName(e.target.value)
@@ -48,9 +55,9 @@ const ShoppingList = () => {
     const showModal = (type, item) => {
         setModalType(type)
 
-        setSelected(item) //needs time to update?
+        setSelected(item)
 
-        if (type === "edit") {//populate fields
+        if (type === "edit") {
             setItemName(item.name)
             setItemDescription(item.description)
             setItemQuantity(item.quantity)
@@ -64,44 +71,55 @@ const ShoppingList = () => {
         setIsModalVisible(false);
         clearItem();
     };
-
-    const addItem = () => {
-        dispatch(
-            itemAdded(itemName, itemDescription, itemQuantity, itemPurchased)
-        )
-        setIsModalVisible(false);
-        clearItem();
-    };
-
-    const editItem = () => {
-        dispatch(
-            itemUpdated({
-                id: selected.id,
-                name: itemName,
-                description: itemDescription,
-                quantity: itemQuantity,
-                purchased: itemPurchased
-            })
-        )
-        setIsModalVisible(false);
-        clearItem();
-    };
-
-    const deleteItem = () => {
-        dispatch(
-            itemDeleted({
-                id: selected.id
-            })
-        )
-        setIsModalVisible(false);
-        clearItem();
-    };
-
+    
     const clearItem = () => {
         setItemName("")
         setItemDescription("")
         setItemQuantity("")
         setItemPurchased(false)
+    };
+
+
+    const addItem = async () => {
+
+        try {
+            setAddRequestStatus('pending')
+            await dispatch(addNewItem({ name: itemName, description: itemDescription, quantity: itemQuantity, purchased: itemPurchased })).unwrap()
+        } catch (err) {
+            console.error("Failed to add item: ", err)
+        } finally {
+            setAddRequestStatus('idle')
+
+        }
+        setIsModalVisible(false);
+        clearItem();
+    };
+
+    const deleteItem = async () => {
+        try {
+            setDeleteRequestStatus('pending')
+            await dispatch(deleteExistingItem({ _id: selected._id })).unwrap()
+        } catch (err) {
+            console.error("Failed to delete item: ", err)
+        } finally {
+            setIsModalVisible(false);
+        }
+        setIsModalVisible(false);
+        clearItem();
+    };
+
+
+    const editItem = async () => {
+        try {
+            setEditRequestStatus('pending')
+            await dispatch(editExistingItem({ _id: selected._id, name: itemName, description: itemDescription, quantity: itemQuantity, purchased: itemPurchased })).unwrap()
+        } catch (err) {
+            console.error("Failed to edit item: ", err)
+        } finally {
+            setEditRequestStatus('idle')
+        }
+        setIsModalVisible(false);
+        clearItem();
     };
 
     return (
@@ -119,9 +137,9 @@ const ShoppingList = () => {
                     <div className="flex flex-col mb-[150px]">
                         <div className="text-lg">Add an item</div>
                         <div className="text-md">Add your new item below</div>
-                        <Input placeholder="Item Name" value={itemName} onChange={updateName}  className="mt-md"/>
-                        <TextArea placeholder="Description" rows={4} maxLength={100} showCount="true" value={itemDescription} onChange={updateDescription}  className="mt-md"/>
-                        <Select placeholder="How many?" onChange={updateQuantity}  className="mt-md">
+                        <Input placeholder="Item Name" value={itemName} onChange={updateName} className="mt-md" />
+                        <TextArea placeholder="Description" rows={4} maxLength={100} showCount="true" value={itemDescription} onChange={updateDescription} className="mt-md" />
+                        <Select placeholder="How many?" onChange={updateQuantity} className="mt-md">
                             <Option value="1">1</Option>
                             <Option value="2">2</Option>
                             <Option value="3">3</Option>
