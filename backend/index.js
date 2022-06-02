@@ -1,11 +1,3 @@
-
-// {
-//     "_id": "1",
-//     "name": "Tomatoes",
-//     "description": "Green cherry tomatoes",
-//     "quantity": "1",
-//     "purchased": true
-//     }
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
@@ -20,9 +12,6 @@ let items = require("./model");
 app.use(bodyParser.json())
 app.use(cors());
 app.use("/", router);
-
-
-
 
 mongoose.connect("mongodb://127.0.0.1:27017/ShoppingList", {
     useNewUrlParser: true
