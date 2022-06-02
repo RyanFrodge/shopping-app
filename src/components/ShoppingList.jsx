@@ -35,7 +35,8 @@ const DeleteModal = styled(Modal)`
 
 const ShoppingList = () => {
 
-    console.count('counter')
+    // used to look at number of rerenders and improve efficiency
+//     console.count('counter')
 
     const dispatch = useDispatch()
     const storeStatus = useSelector(state => state.items.status)
