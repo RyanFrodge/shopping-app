@@ -1,4 +1,4 @@
-# Ryan Frodge Veritone Shopping App
+# Ryan Frodge Shopping App
 
 This project was created using React, Redux, MongoDB, Node and Express
 
