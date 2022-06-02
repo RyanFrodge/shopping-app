@@ -16,6 +16,8 @@
   color: #5C6260
 }
 
+
+
 .ant-modal-header {
   background-color: #FAFAFA;
   border-bottom-color: #D9E2EB;
@@ -42,6 +44,11 @@
 
 .ant-select {
   border-color: #d5dfe9;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #4D81B7;
+  border-color: #4D81B7;
 }
 
 .ant-checkbox-inner{

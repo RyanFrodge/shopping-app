@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { addNewItem, deleteExistingItem, editExistingItem, selectAllItems, fetchItems } from '../features/items/itemsSlice'
+
+
 import { Button, Modal, Input, Select, Checkbox } from 'antd';
 import { MdOutlineEdit, MdDeleteOutline, MdLastPage, } from 'react-icons/md';
 import { AiFillCaretDown } from 'react-icons/ai';
-import { useSelector, useDispatch } from 'react-redux'
-import { addNewItem, deleteExistingItem, editExistingItem, selectAllItems, fetchItems } from '../features/items/itemsSlice'
 import styled from 'styled-components'
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -238,7 +240,7 @@ const ShoppingList = () => {
                         <div className="flex flex-col">
                             <ul>
                                 {items.map((item) =>
-                                    <li key={item._id} className={"flex flex-row border border-gray rounded-md p-lg my-md items-center " + (item.purchased ? "bg-[#F8FAFC]" : "")}>
+                                    <li key={item._id} className={"flex flex-row rounded-md p-lg my-md items-center " + (item.purchased ? "bg-[#F8FAFC]" : "border border-gray")}>
                                         <Checkbox checked={item.purchased}></Checkbox>
                                         <div className="flex flex-col ml-md ">
                                             <div className={"mr-auto " + (item.purchased ? "line-through text-muted-blue" : "font-bold")}>{item.name}</div>
