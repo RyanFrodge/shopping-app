@@ -4,7 +4,7 @@ import { addNewItem, deleteExistingItem, editExistingItem, selectAllItems, fetch
 
 
 import { Button, Modal, Input, Select, Checkbox } from 'antd';
-import { MdOutlineEdit, MdDeleteOutline, MdLastPage, } from 'react-icons/md';
+import { MdOutlineEdit, MdDeleteOutline, MdLastPage } from 'react-icons/md';
 import { AiFillCaretDown } from 'react-icons/ai';
 import styled from 'styled-components'
 import { Spin } from 'antd';
@@ -35,8 +35,6 @@ const DeleteModal = styled(Modal)`
 
 const ShoppingList = () => {
 
-    // used to look at number of rerenders and improve efficiency
-//     console.count('counter')
 
     const dispatch = useDispatch()
     const storeStatus = useSelector(state => state.items.status)
@@ -67,7 +65,10 @@ const ShoppingList = () => {
 
 
     const updateName = (e) => {
-        setItemName(e.target.value)
+        //restricts names to letters and spaces 
+        let lastChar = e.target.value.slice(-1)
+        let validatedString = ((lastChar.toLowerCase() === lastChar.toUpperCase()) && lastChar !== " ") ? e.target.value.slice(0, e.target.value.length-1) : e.target.value
+        setItemName(validatedString)
     };
 
     const updateDescription = (e) => {
@@ -115,7 +116,7 @@ const ShoppingList = () => {
 
     const addItem = async () => {
         try {
-            await dispatch(addNewItem({ name: itemName, description: itemDescription, quantity: itemQuantity, purchased: itemPurchased }))
+            await dispatch(addNewItem({ name: itemName.trim(), description: itemDescription.trim(), quantity: itemQuantity, purchased: itemPurchased }))
         } catch (err) {
             console.error("Failed to add item: ", err)
         }
@@ -128,7 +129,7 @@ const ShoppingList = () => {
             await dispatch(deleteExistingItem({ _id: selected._id }))
         } catch (err) {
             console.error("Failed to delete item: ", err)
-        } 
+        }
         setIsModalVisible(false);
         clearItem();
     };
@@ -136,31 +137,31 @@ const ShoppingList = () => {
 
     const editItem = async () => {
         try {
-            await dispatch(editExistingItem({ _id: selected._id, name: itemName, description: itemDescription, quantity: itemQuantity, purchased: itemPurchased }))
+            await dispatch(editExistingItem({ _id: selected._id, name: itemName.trim(), description: itemDescription.trim(), quantity: itemQuantity, purchased: itemPurchased }))
         } catch (err) {
             console.error("Failed to edit item: ", err)
-        } 
+        }
         setIsModalVisible(false);
         clearItem();
     };
 
     return (
         <>
-        {/* Three modals: Add, Edit, Delete */}
+            {/* Three modals: Add, Edit, Delete */}
             {modalType === "add" ?
                 <Modal title={<div className="flex flex-row items-center "><div className="font-heading font-bold">SHOPPING LIST</div><MdLastPage className=" ml-auto cursor-pointer" onClick={handleCancel} size={20} /></div>} visible={isModalVisible} destroyOnClose={true} width={400} onCancel={handleCancel} closable={false} className="relative"
                     footer={[
                         <Button className="text-black font-bold" key="back" type="text" onClick={handleCancel} >
                             Cancel
                         </Button>,
-                        <Button  className="text-white bg-vivid-blue rounded" key="submit" type="text" onClick={addItem}>
-                            Add Item
-                            </Button>
+                        <Button className="text-white bg-vivid-blue rounded" key="submit" type="text" onClick={addItem} disabled={itemName.trim().length === 0}>
+                            {itemName.trim().length === 0 ? "Name Required" : "Add Item"}
+                        </Button>
                     ]}>
                     <div className="flex flex-col mb-[150px]">
                         <div className="text-lg">Add an Item</div>
                         <div className="text-md text-[#5C6269]">Add your new item below</div>
-                        <Input className="mt-md" placeholder="Item Name" onChange={updateName} />
+                        <Input className="mt-md" placeholder="Item Name" value={itemName} onChange={updateName}/>
                         <div className="relative">
                             <TextArea className="mt-md resize-none" placeholder="Description" rows={4} maxLength={100} onChange={updateDescription} />
                             <div className="absolute bottom-[5px] right-[10px] text-[11px]">{descriptionCount}/100</div>
@@ -172,7 +173,7 @@ const ShoppingList = () => {
                         </Select>
                     </div>
                 </Modal>
-
+ 
                 : modalType === "edit" ?
 
                     <Modal title={<div className="flex flex-row items-center"><div className="font-heading font-bold">SHOPPING LIST</div><MdLastPage className=" ml-auto cursor-pointer" onClick={handleCancel} size={20} /></div>} visible={isModalVisible} destroyOnClose={true} width={400} onCancel={handleCancel} closable={false}
@@ -180,19 +181,19 @@ const ShoppingList = () => {
                             <Button className="text-black font-bold" key="back" type="text" onClick={handleCancel} >
                                 Cancel
                              </Button>,
-                            <Button className="text-white bg-vivid-blue rounded" key="submit" type="text" onClick={editItem}>
-                                Save Item
+                            <Button className="text-white bg-vivid-blue rounded" key="submit" type="text" onClick={editItem} disabled={itemName.trim().length === 0}>
+                                {itemName.trim().length === 0 ? "Name Required" : "Save Item"}
                             </Button>
                         ]}>
                         <div className="flex flex-col mb-[150px]">
                             <div className="text-lg">Edit an Item</div>
                             <div className="text-md text-[#5C6269]">Edit your item below</div>
-                            <Input className="mt-md py-md" placeholder={itemName} onChange={updateName} />
+                            <Input className="mt-md py-md" value={itemName} onChange={updateName} />
                             <div className="relative">
-                                <TextArea className="mt-md resize-none" placeholder={itemDescription} rows={4} maxLength={100} onChange={updateDescription} />
+                                <TextArea className="mt-md resize-none" value={itemDescription} rows={4} maxLength={100} onChange={updateDescription} />
                                 <div className="absolute bottom-[5px] right-[10px] text-[11px]">{descriptionCount}/100</div>
                             </div>
-                            <Select className="mt-md border rounded-sm py-[6px]" suffixIcon={<AiFillCaretDown className="mr-sm" />} placeholder={itemQuantity} onChange={updateQuantity} bordered={false} >
+                            <Select className="mt-md border rounded-sm py-[6px]" suffixIcon={<AiFillCaretDown className="mr-sm" />} value={itemQuantity} onChange={updateQuantity} bordered={false} >
                                 {["1", "2", "3", "4", "5"].map((option) =>
                                     <Option key={option} value={option}>{option}</Option>
                                 )}
@@ -226,7 +227,7 @@ const ShoppingList = () => {
                 :
                 items.length === 0
                     ?
-                    <div className="flex flex-col h-[300px] w-1/2 items-center justify-center mt-[100px] ml-auto mr-auto m-lg border-2 border-gray rounded">
+                    <div className="flex flex-col h-[300px] w-1/3 items-center justify-center mt-[100px] ml-auto mr-auto m-lg border-2 border-gray rounded">
                         <div className="text-[#87898C]">Your shopping list is empty :(</div>
                         <button className="bg-vivid-blue rounded text-white m-md px-md py-sm"
                             onClick={() => showModal("add")}>Add your first item</button>
@@ -241,9 +242,9 @@ const ShoppingList = () => {
                         <div className="flex flex-col">
                             <ul>
                                 {items.map((item) =>
-                                    <li key={item._id} className={"flex flex-row rounded-md p-lg my-md items-center " + (item.purchased ? "bg-[#F8FAFC]" : "border border-gray")}>
-                                        <Checkbox checked={item.purchased}></Checkbox>
-                                        <div className="flex flex-col ml-md ">
+                                    <li key={item._id} className={"flex flex-row rounded-md p-lg my-md items-center h-[80px] " + (item.purchased ? "bg-[#F8FAFC]" : "border border-gray")}>
+                                        <Checkbox checked={item.purchased} className="p-sm"></Checkbox>
+                                        <div className="flex flex-col ml-md">
                                             <div className={"mr-auto " + (item.purchased ? "line-through text-muted-blue" : "font-bold")}>{item.name}</div>
                                             <div className={"text-[#7D7A7A] " + (item.purchased ? "mr-auto line-through" : "mr-auto")}>{item.description}</div>
                                         </div>
