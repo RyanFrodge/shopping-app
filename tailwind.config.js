@@ -19,7 +19,8 @@ module.exports = {
     extend: {
       colors: {
         'vivid-blue': '#1871E8',
-        'muted-blue': '#4D81B7'
+        'muted-blue': '#4D81B7',
+        'blue-gray' : '#5C6269'
       },
     },
   },

@@ -65,9 +65,7 @@ router.route("/items/deleteItem/:id").delete((req, res) => {
             res.status(400).send(`Error deleting listing with id ${query._id}!`);
         } else {
             console.log("1 document deleted");
-            res.send({
-                _id: query._id
-            });
+            res.send(query._id);
         }
     });
 });
@@ -89,13 +87,7 @@ router.route("/items/editItem/:id").post(function (req, res) {
             res.status(400).send(`Error updating listing with id ${listingQuery._id}!`);
         } else {
             console.log("1 document updated");
-            res.send({
-                _id: listingQuery._id,
-                name: updates["$set"].name,
-                description: updates["$set"].description,
-                quantity: updates["$set"].quantity,
-                purchased: updates["$set"].purchased,
-            })
+            res.send({ _id: listingQuery._id, ...updates["$set"] })
         }
     });
 });

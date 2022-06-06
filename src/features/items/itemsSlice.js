@@ -48,35 +48,21 @@ const itemsSlice = createSlice({
             })
             .addCase(fetchItems.fulfilled, (state, action) => {
                 state.status = 'succeeded'
-                state.items = action.payload 
+                state.items = action.payload
             })
             .addCase(fetchItems.rejected, (state, action) => {
                 state.status = 'failed'
                 state.error = action.error.message
             })
             .addCase(addNewItem.fulfilled, (state, action) => {
-                state.items.push({
-                    _id: action.payload._id,
-                    name: action.payload.name,
-                    description: action.payload.description,
-                    quantity: action.payload.quantity,
-                    purchased: action.payload.purchased
-                })
+                state.items.push(action.payload)
             })
             .addCase(deleteExistingItem.fulfilled, (state, action) => {
-                const { _id } = action.payload
-                state.items = state.items.filter(el => el._id !== _id)
+                state.items = state.items.filter(el => el._id !== action.payload)
             })
             .addCase(editExistingItem.fulfilled, (state, action) => {
-                const { _id, name, description, quantity, purchased } = action.payload
-                const existingItem = state.items.find(item => item._id === _id)
-                state.items[state.items.indexOf(existingItem)] = {
-                    _id: _id,
-                    name: name,
-                    description: description,
-                    quantity: quantity,
-                    purchased: purchased
-                }
+                const editIndex = state.items.findIndex(item => item._id === action.payload["_id"])
+                state.items[editIndex] = action.payload
             })
     }
 })

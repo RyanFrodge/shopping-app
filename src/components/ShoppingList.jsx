@@ -67,7 +67,7 @@ const ShoppingList = () => {
     const updateName = (e) => {
         //restricts names to letters and spaces 
         let lastChar = e.target.value.slice(-1)
-        let validatedString = ((lastChar.toLowerCase() === lastChar.toUpperCase()) && lastChar !== " ") ? e.target.value.slice(0, e.target.value.length-1) : e.target.value
+        let validatedString = ((lastChar.toLowerCase() === lastChar.toUpperCase()) && lastChar !== " ") ? e.target.value.slice(0, e.target.value.length - 1) : e.target.value
         setItemName(validatedString)
     };
 
@@ -160,8 +160,8 @@ const ShoppingList = () => {
                     ]}>
                     <div className="flex flex-col mb-[150px]">
                         <div className="text-lg">Add an Item</div>
-                        <div className="text-md text-[#5C6269]">Add your new item below</div>
-                        <Input className="mt-md" placeholder="Item Name" value={itemName} onChange={updateName}/>
+                        <div className="text-md text-blue-gray">Add your new item below</div>
+                        <Input className="mt-md" placeholder="Item Name" value={itemName} onChange={updateName} />
                         <div className="relative">
                             <TextArea className="mt-md resize-none" placeholder="Description" rows={4} maxLength={100} onChange={updateDescription} />
                             <div className="absolute bottom-[5px] right-[10px] text-[11px]">{descriptionCount}/100</div>
@@ -173,7 +173,7 @@ const ShoppingList = () => {
                         </Select>
                     </div>
                 </Modal>
- 
+
                 : modalType === "edit" ?
 
                     <Modal title={<div className="flex flex-row items-center"><div className="font-heading font-bold">SHOPPING LIST</div><MdLastPage className=" ml-auto cursor-pointer" onClick={handleCancel} size={20} /></div>} visible={isModalVisible} destroyOnClose={true} width={400} onCancel={handleCancel} closable={false}
@@ -187,7 +187,7 @@ const ShoppingList = () => {
                         ]}>
                         <div className="flex flex-col mb-[150px]">
                             <div className="text-lg">Edit an Item</div>
-                            <div className="text-md text-[#5C6269]">Edit your item below</div>
+                            <div className="text-md text-blue-gray">Edit your item below</div>
                             <Input className="mt-md py-md" value={itemName} onChange={updateName} />
                             <div className="relative">
                                 <TextArea className="mt-md resize-none" value={itemDescription} rows={4} maxLength={100} onChange={updateDescription} />
@@ -212,27 +212,30 @@ const ShoppingList = () => {
                                 Delete
                              </Button>
                         ]}>
-                        <div className="text-[#5C6269] mb-xl">
+                        <div className="text-blue-gray mb-xl">
                             Are you sure you want to delete this item? This can not be undone.
                         </div>
                     </DeleteModal>
             }
 
-
             {storeStatus === 'loading'
                 ?
+                // if state is loading 
                 <div className="flex justify-center items-center mt-[150px]">
                     <Spin indicator={antIcon} />
                 </div>
                 :
+                //if state is not loading             
                 items.length === 0
                     ?
+                    // if there are no items currently
                     <div className="flex flex-col h-[300px] w-1/3 items-center justify-center mt-[100px] ml-auto mr-auto m-lg border-2 border-gray rounded">
                         <div className="text-[#87898C]">Your shopping list is empty :(</div>
                         <button className="bg-vivid-blue rounded text-white m-md px-md py-sm"
                             onClick={() => showModal("add")}>Add your first item</button>
                     </div>
                     :
+                    // if there are items
                     <div className="w-[80%] mt-xxl ml-auto mr-auto">
                         <div className="flex items-center">
                             <div className="text-xl"><strong>Your Items</strong></div>
