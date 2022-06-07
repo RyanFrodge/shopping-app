@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import ShoppingList from './components/ShoppingList.jsx'
 import 'antd/dist/antd.min.css';
 
